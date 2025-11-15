@@ -49,7 +49,7 @@ export function Safaris() {
           {safaris.map((safari) => (
             <Card
               key={safari.id}
-              className="group overflow-hidden hover:shadow-2xl transition-all duration-300 bg-white"
+              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-white"
             >
               <div className="relative h-80 overflow-hidden">
                 <ImageWithFallback
@@ -123,3 +123,4 @@ export function Safaris() {
     </section>
   );
 }
+
