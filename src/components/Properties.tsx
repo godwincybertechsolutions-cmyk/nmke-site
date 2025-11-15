@@ -59,7 +59,7 @@ export function Properties() {
           {properties.map((property) => (
             <Card
               key={property.id}
-              className="group overflow-hidden hover:shadow-2xl transition-all duration-300 border-gray-200 bg-white"
+              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white"
             >
               <div className="relative h-64 overflow-hidden">
                 <ImageWithFallback
