@@ -1,10 +1,11 @@
 import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('home');
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -13,6 +14,33 @@ export function Header() {
       setMobileMenuOpen(false);
     }
   };
+
+  useEffect(() => {
+    const sectionIds = ['home', 'properties', 'safaris', 'about', 'contact'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      {
+        // Emphasize the middle of the viewport
+        rootMargin: '-30% 0px -60% 0px',
+        threshold: 0.2,
+      }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-md border-b border-gray-100">
@@ -37,28 +65,36 @@ export function Header() {
             <Button
               variant="ghost"
               onClick={() => scrollToSection('home')}
-              className="text-black hover:text-[#DD5536]"
+              className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
+                activeSection === 'home' ? 'text-[#DD5536] after:scale-x-100' : ''
+              }`}
             >
               Home
             </Button>
             <Button
               variant="ghost"
               onClick={() => scrollToSection('properties')}
-              className="text-black hover:text-[#DD5536]"
+              className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
+                activeSection === 'properties' ? 'text-[#DD5536] after:scale-x-100' : ''
+              }`}
             >
               Properties
             </Button>
             <Button
               variant="ghost"
               onClick={() => scrollToSection('safaris')}
-              className="text-black hover:text-[#DD5536]"
+              className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
+                activeSection === 'safaris' ? 'text-[#DD5536] after:scale-x-100' : ''
+              }`}
             >
               Safaris
             </Button>
             <Button
               variant="ghost"
               onClick={() => scrollToSection('about')}
-              className="text-black hover:text-[#DD5536]"
+              className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
+                activeSection === 'about' ? 'text-[#DD5536] after:scale-x-100' : ''
+              }`}
             >
               About
             </Button>
