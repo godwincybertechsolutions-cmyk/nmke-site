@@ -53,16 +53,16 @@ export function TrustSignals() {
             {trackItems.map((p, i) => (
               <div key={`${p.id}-${i}`} className="shrink-0">
                 {p.logo ? (
-                  <div className="w-52 h-24 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.03]">
+                  <div className="w-52 h-24 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.03] p-3">
                     <ImageWithFallback
                       src={p.logo}
                       alt={p.name}
-                      className="max-h-12 w-auto mx-auto filter grayscale hover:grayscale-0 transition-transform duration-300"
+                      className={`mx-auto filter grayscale hover:grayscale-0 transition-transform duration-300 object-contain ${p.name === 'Mastercard' ? 'max-h-10' : 'max-h-12'} w-auto`}
                       loading="lazy"
                     />
                   </div>
                 ) : (
-                  <div className="w-52 h-24 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.03]">
+                  <div className="w-52 h-24 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.03] p-3">
                     <Monogram text={p.acronym ?? p.name.slice(0, 3).toUpperCase()} />
                   </div>
                 )}
