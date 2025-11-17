@@ -97,7 +97,7 @@ export function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-[textUp_0.6s_ease-out]">
           <Button
             size="lg"
-            onClick={() => { window.history.replaceState(null, '', '#properties'); document.getElementById('properties')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={() => { window.history.pushState(null, '', '/properties'); window.dispatchEvent(new PopStateEvent('popstate')); }}
             className="bg-[#DD5536] text-white hover:bg-[#c44a2e] text-base h-12 px-8 group"
           >
             Explore Properties
@@ -106,7 +106,7 @@ export function Hero() {
           <Button
             size="lg"
             variant="outline"
-            onClick={() => { window.history.replaceState(null, '', '#safaris'); document.getElementById('safaris')?.scrollIntoView({ behavior: 'smooth' }) }}
+            onClick={() => { window.history.pushState(null, '', '/safaris'); window.dispatchEvent(new PopStateEvent('popstate')); }}
             className="bg-white/95 backdrop-blur-sm text-black hover:bg-white border-white text-base h-12 px-8 group"
           >
             Discover Safaris
