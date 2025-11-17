@@ -10,7 +10,7 @@ const partners: Partner[] = [
   { id: 4, name: 'Amboseli Lodge Partners', acronym: 'ALP' },
   { id: 5, name: 'Masai Mara Lodge Partners', acronym: 'MML' },
   { id: 6, name: 'Visa', acronym: 'VISA', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_2021.svg' },
-  { id: 7, name: 'Mastercard', acronym: 'MC', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg' },
+  { id: 7, name: 'Mastercard', acronym: 'MC', logo: 'MC' },
 ]
 
 function Monogram({ text }: { text: string }) {
