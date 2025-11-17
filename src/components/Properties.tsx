@@ -1,9 +1,9 @@
-import { Home, Building2, MapPin, ArrowRight, Bed, Bath, Flame, Star, Tag } from 'lucide-react';
+import { MapPin, ArrowRight, Bed, Bath } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const properties = [
   {
@@ -52,19 +52,36 @@ export function Properties() {
     if (!selectedArea) return properties;
     return properties.filter((p) => p.location.toLowerCase().includes(selectedArea.toLowerCase()));
   }, [selectedArea]);
+  useEffect(() => {
+    const section = document.getElementById('properties')
+    if (!section) return
+    const items = Array.from(section.querySelectorAll('[data-reveal="true"]')) as HTMLElement[]
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-[textUp_0.6s_ease-out_forwards]')
+          }
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.2 }
+    )
+    items.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
   return (
     <section id="properties" className="py-24 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="mb-4">
+          <div className="mb-4 animate-[fadeLong_0.6s_ease-out]">
             <Badge variant="outline" className="text-[#DD5536] border-[#DD5536]">
               Our Properties
             </Badge>
           </div>
-          <h2 className="text-4xl md:text-5xl text-black mb-4">
+          <h2 className="text-4xl md:text-5xl text-black mb-4 animate-[textUp_0.6s_ease-out]">
             Premium <span className="text-[#DD5536]">Properties</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto animate-[fadeLong_0.8s_ease-out]">
             Find your perfect property for sale, rent, or lease in prime Nairobi locations
           </p>
         </div>
@@ -90,7 +107,8 @@ export function Properties() {
             {featured.map((property) => (
               <Card
                 key={`featured-${property.id}`}
-                className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white"
+                className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white opacity-0 translate-y-3"
+                data-reveal="true"
               >
                 <div className="relative h-56 overflow-hidden">
                   <ImageWithFallback
@@ -149,7 +167,8 @@ export function Properties() {
           {filtered.map((property) => (
             <Card
               key={property.id}
-              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white"
+              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white opacity-0 translate-y-3"
+              data-reveal="true"
             >
               <div className="relative h-64 overflow-hidden">
                 <ImageWithFallback
@@ -208,4 +227,3 @@ export function Properties() {
     </section>
   );
 }
-
