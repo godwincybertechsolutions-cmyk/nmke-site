@@ -1,4 +1,4 @@
-import heroVideo from '../assets/building.mp4';
+import heroVideo from '../building.mp4';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
