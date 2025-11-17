@@ -3,17 +3,13 @@ import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
-export function Header() {
+export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('home');
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      window.history.replaceState(null, '', `#${id}`);
-      element.scrollIntoView({ behavior: 'smooth' });
-      setMobileMenuOpen(false);
-    }
+  const go = (path: string) => {
+    if (onNavigate) onNavigate(path)
+    setMobileMenuOpen(false)
   };
 
   useEffect(() => {
@@ -75,49 +71,49 @@ export function Header() {
           <nav className="hidden md:flex items-center space-x-1">
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('home')}
+              onClick={() => go('/')}
               className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
-                activeSection === 'home' ? 'text-[#DD5536] after:scale-x-100' : ''
+                window.location.pathname === '/' ? 'text-[#DD5536] after:scale-x-100' : ''
               }`}
             >
               Home
             </Button>
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('properties')}
+              onClick={() => go('/properties')}
               className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
-                activeSection === 'properties' ? 'text-[#DD5536] after:scale-x-100' : ''
+                window.location.pathname === '/properties' ? 'text-[#DD5536] after:scale-x-100' : ''
               }`}
             >
               Properties
             </Button>
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('safaris')}
+              onClick={() => go('/safaris')}
               className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
-                activeSection === 'safaris' ? 'text-[#DD5536] after:scale-x-100' : ''
+                window.location.pathname === '/safaris' ? 'text-[#DD5536] after:scale-x-100' : ''
               }`}
             >
               Safaris
             </Button>
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('about')}
+              onClick={() => go('/about')}
               className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
-                activeSection === 'about' ? 'text-[#DD5536] after:scale-x-100' : ''
+                window.location.pathname === '/about' ? 'text-[#DD5536] after:scale-x-100' : ''
               }`}
             >
               About
             </Button>
             <Button
-              onClick={() => scrollToSection('properties')}
+              onClick={() => go('/properties')}
               className="bg-[#DD5536] text-white hover:bg-[#c44a2e] ml-2"
             >
               Schedule Viewing
             </Button>
             <Button
               variant="outline"
-              onClick={() => scrollToSection('safaris')}
+              onClick={() => go('/safaris')}
               className="ml-2"
             >
               Request Itinerary
@@ -140,41 +136,41 @@ export function Header() {
           <nav className="md:hidden pb-4 flex flex-col space-y-2 border-t border-gray-100 pt-4">
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('home')}
+              onClick={() => go('/')}
               className="text-black hover:text-[#DD5536] justify-start"
             >
               Home
             </Button>
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('properties')}
+              onClick={() => go('/properties')}
               className="text-black hover:text-[#DD5536] justify-start"
             >
               Properties
             </Button>
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('safaris')}
+              onClick={() => go('/safaris')}
               className="text-black hover:text-[#DD5536] justify-start"
             >
               Safaris
             </Button>
             <Button
               variant="ghost"
-              onClick={() => scrollToSection('about')}
+              onClick={() => go('/about')}
               className="text-black hover:text-[#DD5536] justify-start"
             >
               About
             </Button>
             <Button
-              onClick={() => scrollToSection('properties')}
+              onClick={() => go('/properties')}
               className="bg-[#DD5536] text-white hover:bg-[#c44a2e] justify-start"
             >
               Schedule Viewing
             </Button>
             <Button
               variant="outline"
-              onClick={() => scrollToSection('safaris')}
+              onClick={() => go('/safaris')}
               className="justify-start"
             >
               Request Itinerary
@@ -185,4 +181,3 @@ export function Header() {
     </header>
   );
 }
-
