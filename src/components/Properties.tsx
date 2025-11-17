@@ -70,7 +70,7 @@ export function Properties() {
     return () => observer.disconnect()
   }, [])
   return (
-    <section id="properties" className="py-24 px-4 bg-gray-50">
+    <section id="properties" className="py-24 px-4 bg-gray-50 scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <div className="mb-4 animate-[fadeLong_0.6s_ease-out]">
