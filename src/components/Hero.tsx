@@ -56,7 +56,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 z-0">
         <video
           autoPlay
@@ -97,7 +97,7 @@ export function Hero() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-[textUp_0.6s_ease-out]">
           <Button
             size="lg"
-            onClick={() => document.getElementById('properties')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => { window.history.replaceState(null, '', '#properties'); document.getElementById('properties')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="bg-[#DD5536] text-white hover:bg-[#c44a2e] text-base h-12 px-8 group"
           >
             Explore Properties
@@ -106,7 +106,7 @@ export function Hero() {
           <Button
             size="lg"
             variant="outline"
-            onClick={() => document.getElementById('safaris')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => { window.history.replaceState(null, '', '#safaris'); document.getElementById('safaris')?.scrollIntoView({ behavior: 'smooth' }) }}
             className="bg-white/95 backdrop-blur-sm text-black hover:bg-white border-white text-base h-12 px-8 group"
           >
             Discover Safaris
