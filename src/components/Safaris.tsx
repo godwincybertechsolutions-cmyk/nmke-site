@@ -12,7 +12,10 @@ const safaris = [
     duration: '5 Days / 4 Nights',
     groupSize: 'Up to 8 people',
     price: 'From KSH 120,000',
+    perPerson: true,
+    seasonality: 'Best Jun–Oct; Dec–Feb',
     highlights: ['Game Drives', 'Luxury Lodge', 'All Meals', 'Park Fees'],
+    notIncluded: ['International Flights', 'Personal Insurance', 'Tips'],
     image: 'https://images.unsplash.com/photo-1703538354069-2d5693331330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxLZW55YSUyME1hc2FpJTIwTWFyYXxlbnwxfHx8fDE3NjMxMDkyODB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
   {
@@ -22,7 +25,10 @@ const safaris = [
     duration: '3 Days / 2 Nights',
     groupSize: 'Up to 10 people',
     price: 'From KSH 75,000',
+    perPerson: true,
+    seasonality: 'Best Jun–Oct; Jan–Feb',
     highlights: ['Elephant Viewing', 'Kilimanjaro Views', 'Photography', 'Transport'],
+    notIncluded: ['International Flights', 'Personal Insurance', 'Tips'],
     image: 'https://images.unsplash.com/photo-1653293144611-1ff36f8c7c99?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBZnJpY2FuJTIwc2FmYXJpJTIwd2lsZGxpZmV8ZW58MXx8fHwxNzYzMTA5Mjc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
   },
 ];
@@ -68,6 +74,10 @@ export function Safaris() {
               </div>
               <CardContent className="p-8">
                 <p className="text-gray-600 mb-6 leading-relaxed">{safari.description}</p>
+                <div className="flex flex-wrap items-center gap-3 mb-6">
+                  <Badge variant="outline" className="text-[#DD5536] border-[#DD5536]">{safari.price}{safari.perPerson ? ' per person' : ''}</Badge>
+                  <Badge variant="outline" className="text-gray-700 border-gray-200">{safari.seasonality}</Badge>
+                </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 pb-6 border-b border-gray-100">
                   <div className="flex items-center text-gray-700">
@@ -84,17 +94,33 @@ export function Safaris() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mb-6">
-                  {safari.highlights.map((highlight, index) => (
-                    <div key={index} className="flex items-center text-sm text-gray-600">
-                      <CheckCircle2 size={16} className="mr-2 text-[#DD5536] flex-shrink-0" />
-                      <span>{highlight}</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <h4 className="text-sm text-black mb-2">Included</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {safari.highlights.map((highlight, index) => (
+                        <div key={index} className="flex items-center text-sm text-gray-600">
+                          <CheckCircle2 size={16} className="mr-2 text-[#DD5536] flex-shrink-0" />
+                          <span>{highlight}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+                  <div>
+                    <h4 className="text-sm text-black mb-2">Not included</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {safari.notIncluded?.map((ni, index) => (
+                        <div key={index} className="flex items-center text-sm text-gray-600">
+                          <span className="inline-block w-2 h-2 rounded-full bg-gray-300 mr-2" />
+                          <span>{ni}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="text-2xl text-[#DD5536]">{safari.price}</div>
+                  <div className="text-xl text-[#DD5536]">{safari.price}{safari.perPerson ? ' per person' : ''}</div>
                   <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn">
                     Book Now
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
