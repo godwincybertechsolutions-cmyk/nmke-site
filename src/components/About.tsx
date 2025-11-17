@@ -30,15 +30,15 @@ export function About() {
     <section id="about" className="py-24 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="mb-4">
+          <div className="mb-4 animate-[fadeLong_0.6s_ease-out]">
             <Badge variant="outline" className="text-[#DD5536] border-[#DD5536]">
               About Us
             </Badge>
           </div>
-          <h2 className="text-4xl md:text-5xl text-black mb-6">
+          <h2 className="text-4xl md:text-5xl text-black mb-6 animate-[textUp_0.6s_ease-out]">
             About <span className="text-[#DD5536]">New Manyatta Kenya</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed animate-[fadeLong_0.8s_ease-out]">
             We are your trusted partner for premium real estate services and authentic safari experiences in Kenya. 
             With years of expertise in both property management and tourism, we bring you the best of what Kenya has to offer.
           </p>
