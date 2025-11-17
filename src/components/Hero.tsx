@@ -25,14 +25,33 @@ export function Hero() {
 
   useEffect(() => {
     let i = 0
-    const id = setInterval(() => {
-      setTypedText(fullText.slice(0, i + 1))
-      i++
-      if (i >= fullText.length) {
-        clearInterval(id)
+    let dir = 1
+    let t: any
+    const tick = () => {
+      setTypedText(fullText.slice(0, i))
+      if (dir === 1) {
+        if (i < fullText.length) {
+          i++
+          t = setTimeout(tick, 18)
+        } else {
+          dir = -1
+          t = setTimeout(() => {
+            i--
+            tick()
+          }, 1200)
+        }
+      } else {
+        if (i > 0) {
+          i--
+          t = setTimeout(tick, 12)
+        } else {
+          dir = 1
+          t = setTimeout(tick, 600)
+        }
       }
-    }, 18)
-    return () => clearInterval(id)
+    }
+    t = setTimeout(tick, 300)
+    return () => clearTimeout(t)
   }, [])
 
   return (
