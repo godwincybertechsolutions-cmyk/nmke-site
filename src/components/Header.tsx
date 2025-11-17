@@ -99,10 +99,17 @@ export function Header() {
               About
             </Button>
             <Button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => scrollToSection('properties')}
               className="bg-[#DD5536] text-white hover:bg-[#c44a2e] ml-2"
             >
-              Contact
+              Schedule Viewing
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => scrollToSection('safaris')}
+              className="ml-2"
+            >
+              Request Itinerary
             </Button>
           </nav>
 
@@ -149,10 +156,17 @@ export function Header() {
               About
             </Button>
             <Button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => scrollToSection('properties')}
               className="bg-[#DD5536] text-white hover:bg-[#c44a2e] justify-start"
             >
-              Contact
+              Schedule Viewing
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => scrollToSection('safaris')}
+              className="justify-start"
+            >
+              Request Itinerary
             </Button>
           </nav>
         )}
