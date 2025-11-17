@@ -9,21 +9,58 @@ import { Testimonials } from './components/Testimonials';
 import { TrustSignals } from './components/TrustSignals';
 import { MobileCTA } from './components/MobileCTA';
 import { GlobalSearch } from './components/GlobalSearch';
+import { useEffect, useState } from 'react';
 
 export default function App() {
+  const [route, setRoute] = useState<string>(window.location.pathname || '/');
+
+  useEffect(() => {
+    const onPop = () => setRoute(window.location.pathname || '/');
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  const navigate = (path: string) => {
+    if (window.location.pathname !== path) {
+      window.history.pushState(null, '', path);
+      setRoute(path);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen">
-      <Header />
+      <Header onNavigate={navigate} />
       <MobileCTA />
       <GlobalSearch />
       <main className="space-y-24">
-        <Hero />
-        <Properties />
-        <Safaris />
-        <Testimonials />
-        <About />
-        <Contact />
-        <TrustSignals />
+        {route === '/' && (
+          <>
+            <Hero />
+            <TrustSignals />
+          </>
+        )}
+        {route === '/properties' && (
+          <>
+            <Properties />
+          </>
+        )}
+        {route === '/safaris' && (
+          <>
+            <Safaris />
+          </>
+        )}
+        {route === '/about' && (
+          <>
+            <About />
+            <Testimonials />
+          </>
+        )}
+        {route === '/contact' && (
+          <>
+            <Contact />
+          </>
+        )}
       </main>
       <Footer />
     </div>
