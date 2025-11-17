@@ -1,6 +1,7 @@
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
+import { Badge } from './ui/badge';
 
 export function Hero() {
   return (
@@ -10,6 +11,7 @@ export function Hero() {
           src="https://images.unsplash.com/photo-1669557673726-293309494c20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxLZW55YSUyMGxhbmRzY2FwZSUyMHNhZmFyaXxlbnwxfHx8fDE3NjMxMDkyNzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
           alt="Kenya landscape"
           className="w-full h-full object-cover scale-105 animate-[scale_20s_ease-in-out_infinite_alternate]"
+          loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
       </div>
@@ -23,9 +25,15 @@ export function Hero() {
         <h1 className="text-4xl sm:text-5xl md:text-7xl text-white mb-6 leading-tight animate-[fadeIn_1s_ease-out_0.2s_both]">
           Your Gateway to <span className="text-[#DD5536] inline-block">Premium Properties</span> and <span className="text-[#DD5536] inline-block">Unforgettable Safaris</span>
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto animate-[fadeIn_1s_ease-out_0.4s_both]">
+        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 max-w-3xl mx-auto animate-[fadeIn_1s_ease-out_0.4s_both]">
           Experience the best of Kenya with our exceptional real estate services and curated safari adventures
         </p>
+        <div className="flex flex-wrap justify-center gap-3 mb-8 animate-[fadeIn_1s_ease-out_0.5s_both]">
+          <Badge className="bg-white/10 text-white border-white/20">Trusted Agents</Badge>
+          <Badge className="bg-white/10 text-white border-white/20">Prime Areas</Badge>
+          <Badge className="bg-white/10 text-white border-white/20">Tailored Safaris</Badge>
+          <Badge className="bg-white/10 text-white border-white/20">Secure Payments</Badge>
+        </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-[fadeIn_1s_ease-out_0.6s_both]">
           <Button
             size="lg"
