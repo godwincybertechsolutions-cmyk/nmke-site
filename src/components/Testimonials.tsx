@@ -43,18 +43,18 @@ export function Testimonials() {
     <section className="py-24 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="mb-4">
+          <div className="mb-4 animate-[fadeLong_0.6s_ease-out]">
             <Badge variant="outline" className="text-[#DD5536] border-[#DD5536]">Testimonials</Badge>
           </div>
-          <h2 className="text-4xl md:text-5xl text-black mb-4">
+          <h2 className="text-4xl md:text-5xl text-black mb-4 animate-[textUp_0.6s_ease-out]">
             What <span className="text-[#DD5536]">Clients Say</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Real stories from property buyers, renters, and safari guests</p>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto animate-[fadeLong_0.8s_ease-out]">Real stories from property buyers, renters, and safari guests</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {testimonials.map((t) => (
-            <Card key={t.id} className="bg-white border-gray-200 hover:shadow-lg transition-shadow">
+            <Card key={t.id} className="bg-white border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
               <div className="h-40 overflow-hidden">
                 <ImageWithFallback src={t.image} alt={t.name} className="w-full h-full object-cover" />
               </div>
