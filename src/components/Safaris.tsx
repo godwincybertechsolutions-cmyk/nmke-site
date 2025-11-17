@@ -43,7 +43,7 @@ export function Safaris() {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('animate-[textUp_0.6s_ease-out_forwards]')
+            entry.target.classList.add('animate-[textUp_0.6s_ease-out_both]')
           }
         }
       },
@@ -69,14 +69,14 @@ export function Safaris() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-16">
           {safaris.map((safari) => (
             <Card
               key={safari.id}
-              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-white opacity-0 translate-y-3"
+              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-white flex flex-col"
               data-reveal="true"
             >
-              <div className="relative h-80 overflow-hidden">
+              <div className="relative h-64 overflow-hidden">
                 <ImageWithFallback
                   src={safari.image}
                   alt={safari.title}
@@ -91,7 +91,7 @@ export function Safaris() {
                   </div>
                 </div>
               </div>
-              <CardContent className="p-8">
+              <CardContent className="p-8 flex-1 flex flex-col">
                 <p className="text-gray-600 mb-6 leading-relaxed">{safari.description}</p>
                 <div className="flex flex-wrap items-center gap-3 mb-6">
                   <Badge variant="outline" className="text-[#DD5536] border-[#DD5536]">{safari.price}{safari.perPerson ? ' per person' : ''}</Badge>
@@ -138,7 +138,7 @@ export function Safaris() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{safari.price}{safari.perPerson ? ' per person' : ''}</div>
                   <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn">
                     Book Now
@@ -168,3 +168,4 @@ export function Safaris() {
     </section>
   );
 }
+
