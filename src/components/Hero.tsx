@@ -2,16 +2,34 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { useEffect, useState } from 'react';
 
 export function Hero() {
+  const [parallax, setParallax] = useState(0)
+
+  useEffect(() => {
+    const onScroll = () => {
+      const el = document.getElementById('home')
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const h = rect.height || window.innerHeight
+      const progress = Math.min(Math.max(-rect.top / h, 0), 1)
+      setParallax(progress * 30)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <ImageWithFallback
           src="https://images.unsplash.com/photo-1669557673726-293309494c20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxLZW55YSUyMGxhbmRzY2FwZSUyMHNhZmFyaXxlbnwxfHx8fDE3NjMxMDkyNzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
           alt="Kenya landscape"
-          className="w-full h-full object-cover scale-105 animate-[scale_20s_ease-in-out_infinite_alternate]"
+          className="w-full h-full object-cover will-change-transform"
           loading="eager"
+          style={{ transform: `translateY(${parallax}px) scale(1.05)` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
       </div>
