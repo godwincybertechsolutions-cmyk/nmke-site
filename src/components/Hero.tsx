@@ -1,4 +1,4 @@
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import heroVideo from '../assets/building.mp4';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
@@ -57,13 +57,18 @@ export function Hero() {
   return (
     <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <ImageWithFallback
-          src="https://images.unsplash.com/photo-1669557673726-293309494c20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxLZW55YSUyMGxhbmRzY2FwZSUyMHNhZmFyaXxlbnwxfHx8fDE3NjMxMDkyNzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-          alt="Kenya landscape"
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
           className="w-full h-full object-cover will-change-transform"
-          loading="eager"
           style={{ transform: `translateY(${parallax}px) scale(1.05)` }}
-        />
+        >
+          <source src="/building.mp4" type="video/mp4" />
+          <source src={heroVideo} type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
       </div>
 
