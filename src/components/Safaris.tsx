@@ -53,7 +53,7 @@ export function Safaris() {
     return () => observer.disconnect()
   }, [])
   return (
-    <section id="safaris" className="py-24 px-4 bg-white">
+    <section id="safaris" className="py-24 px-4 bg-white scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <div className="mb-4 animate-[fadeLong_0.6s_ease-out]">
@@ -168,4 +168,3 @@ export function Safaris() {
     </section>
   );
 }
-
