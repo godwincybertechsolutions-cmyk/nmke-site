@@ -3,6 +3,7 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { useEffect } from 'react';
 
 const safaris = [
   {
@@ -34,19 +35,36 @@ const safaris = [
 ];
 
 export function Safaris() {
+  useEffect(() => {
+    const section = document.getElementById('safaris')
+    if (!section) return
+    const items = Array.from(section.querySelectorAll('[data-reveal="true"]')) as HTMLElement[]
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-[textUp_0.6s_ease-out_forwards]')
+          }
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.2 }
+    )
+    items.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
   return (
     <section id="safaris" className="py-24 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <div className="mb-4">
+          <div className="mb-4 animate-[fadeLong_0.6s_ease-out]">
             <Badge variant="outline" className="text-[#DD5536] border-[#DD5536]">
               Safari Adventures
             </Badge>
           </div>
-          <h2 className="text-4xl md:text-5xl text-black mb-4">
+          <h2 className="text-4xl md:text-5xl text-black mb-4 animate-[textUp_0.6s_ease-out]">
             Unforgettable <span className="text-[#DD5536]">Safari Adventures</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto animate-[fadeLong_0.8s_ease-out]">
             Discover the beauty of Kenya's wildlife and landscapes with our expertly curated safari experiences
           </p>
         </div>
@@ -55,7 +73,8 @@ export function Safaris() {
           {safaris.map((safari) => (
             <Card
               key={safari.id}
-              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-white"
+              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-white opacity-0 translate-y-3"
+              data-reveal="true"
             >
               <div className="relative h-80 overflow-hidden">
                 <ImageWithFallback
@@ -149,4 +168,3 @@ export function Safaris() {
     </section>
   );
 }
-
