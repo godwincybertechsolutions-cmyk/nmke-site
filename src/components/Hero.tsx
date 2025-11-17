@@ -40,19 +40,19 @@ export function Hero() {
             Real Estate & Safari Experiences
           </span>
         </div>
-        <h1 className="text-4xl sm:text-5xl md:text-7xl text-white mb-6 leading-tight animate-[fadeIn_1s_ease-out_0.2s_both]">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl text-white mb-6 leading-tight animate-[textUp_0.6s_ease-out]">
           Your Gateway to <span className="text-[#DD5536] inline-block">Premium Properties</span> and <span className="text-[#DD5536] inline-block">Unforgettable Safaris</span>
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 max-w-3xl mx-auto animate-[fadeIn_1s_ease-out_0.4s_both]">
+        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 max-w-3xl mx-auto animate-[fadeLong_0.8s_ease-out]">
           Experience the best of Kenya with our exceptional real estate services and curated safari adventures
         </p>
-        <div className="flex flex-wrap justify-center gap-3 mb-8 animate-[fadeIn_1s_ease-out_0.5s_both]">
+        <div className="flex flex-wrap justify-center gap-3 mb-8 animate-[textUp_0.6s_ease-out]">
           <Badge className="bg-white/10 text-white border-white/20">Trusted Agents</Badge>
           <Badge className="bg-white/10 text-white border-white/20">Prime Areas</Badge>
           <Badge className="bg-white/10 text-white border-white/20">Tailored Safaris</Badge>
           <Badge className="bg-white/10 text-white border-white/20">Secure Payments</Badge>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-[fadeIn_1s_ease-out_0.6s_both]">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-[textUp_0.6s_ease-out]">
           <Button
             size="lg"
             onClick={() => document.getElementById('properties')?.scrollIntoView({ behavior: 'smooth' })}
