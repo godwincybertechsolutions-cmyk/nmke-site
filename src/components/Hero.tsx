@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 
 export function Hero() {
   const [parallax, setParallax] = useState(0)
+  const fullText = 'Experience the best of Kenya with our exceptional real estate services and curated safari adventures'
+  const [typedText, setTypedText] = useState('')
 
   useEffect(() => {
     const onScroll = () => {
@@ -19,6 +21,18 @@ export function Hero() {
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    let i = 0
+    const id = setInterval(() => {
+      setTypedText(fullText.slice(0, i + 1))
+      i++
+      if (i >= fullText.length) {
+        clearInterval(id)
+      }
+    }, 18)
+    return () => clearInterval(id)
   }, [])
 
   return (
@@ -43,8 +57,9 @@ export function Hero() {
         <h1 className="text-4xl sm:text-5xl md:text-7xl text-white mb-6 leading-tight animate-[textUp_0.6s_ease-out]">
           Your Gateway to <span className="text-[#DD5536] inline-block">Premium Properties</span> and <span className="text-[#DD5536] inline-block">Unforgettable Safaris</span>
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 max-w-3xl mx-auto animate-[fadeLong_0.8s_ease-out]">
-          Experience the best of Kenya with our exceptional real estate services and curated safari adventures
+        <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 max-w-3xl mx-auto" aria-live="polite">
+          <span>{typedText}</span>
+          <span className="inline-block ml-1 align-baseline animate-[blink_1s_steps(1,end)_infinite]">|</span>
         </p>
         <div className="flex flex-wrap justify-center gap-3 mb-8 animate-[textUp_0.6s_ease-out]">
           <Badge className="bg-white/10 text-white border-white/20">Trusted Agents</Badge>
