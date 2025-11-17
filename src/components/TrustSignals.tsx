@@ -1,28 +1,74 @@
 import { Badge } from './ui/badge'
 import { ImageWithFallback } from './figma/ImageWithFallback'
 
-const partners = [
-  { id: 1, name: 'Kenya Tourism Board', logo: 'https://images.unsplash.com/photo-1564769625905-4e36a1f2e98f?q=80&w=320&auto=format&fit=crop' },
-  { id: 2, name: 'Real Estate Association', logo: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=320&auto=format&fit=crop' },
-  { id: 3, name: 'Lodge Partner', logo: 'https://images.unsplash.com/photo-1526045612212-70caf35c14df?q=80&w=320&auto=format&fit=crop' },
-  { id: 4, name: 'Secure Payments', logo: 'https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=320&auto=format&fit=crop' },
+type Partner = { id: number; name: string; acronym?: string; logo?: string }
+
+const partners: Partner[] = [
+  { id: 1, name: 'Kenya Tourism Board', acronym: 'KTB' },
+  { id: 2, name: 'Kenya Assoc. of Tour Operators', acronym: 'KATO' },
+  { id: 3, name: 'Kenya Realtors Association', acronym: 'KRA' },
+  { id: 4, name: 'Amboseli Lodge Partners', acronym: 'ALP' },
+  { id: 5, name: 'Masai Mara Lodge Partners', acronym: 'MML' },
+  { id: 6, name: 'Visa Secure', acronym: 'VISA' },
+  { id: 7, name: 'Mastercard SecureCode', acronym: 'MC' },
 ]
 
-export function TrustSignals() {
+function Monogram({ text }: { text: string }) {
   return (
-    <section className="bg-gray-50 py-12 px-4">
+    <div className="w-40 h-20 bg-white rounded-lg border border-gray-200 flex items-center justify-center">
+      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#DD5536] to-[#c44a2e] flex items-center justify-center text-white font-semibold">
+        {text}
+      </div>
+    </div>
+  )
+}
+
+export function TrustSignals() {
+  const trackItems = [...partners, ...partners]
+  return (
+    <section className="bg-gray-50 py-16 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <Badge variant="outline" className="text-[#DD5536] border-[#DD5536]">Trusted by Partners</Badge>
+          <h3 className="text-2xl md:text-3xl text-black mt-3">Certified and Partnered for Your Peace of Mind</h3>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
-          {partners.map((p) => (
-            <div key={p.id} className="flex items-center justify-center">
-              <div className="w-40 h-20 bg-white rounded-lg border border-gray-200 overflow-hidden flex items-center justify-center">
-                <ImageWithFallback src={p.logo} alt={p.name} className="w-full h-full object-cover" />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+            <div className="text-sm text-gray-600">Tourism & Operators</div>
+            <div className="mt-2 text-[#DD5536] text-sm">KTB • KATO</div>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+            <div className="text-sm text-gray-600">Real Estate & Licensing</div>
+            <div className="mt-2 text-[#DD5536] text-sm">Local Regulatory Bodies</div>
+          </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-4 text-center">
+            <div className="text-sm text-gray-600">Secure Payments</div>
+            <div className="mt-2 text-[#DD5536] text-sm">Visa • Mastercard</div>
+          </div>
+        </div>
+
+        <div className="group overflow-hidden">
+          <div className="flex gap-6 items-center w-[200%] animate-[marquee_28s_linear_infinite] group-hover:[animation-play-state:paused]">
+            {trackItems.map((p, i) => (
+              <div key={`${p.id}-${i}`} className="shrink-0">
+                {p.logo ? (
+                  <div className="w-40 h-20 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.02]">
+                    <ImageWithFallback
+                      src={p.logo}
+                      alt={p.name}
+                      className="w-full h-full object-contain filter grayscale hover:grayscale-0 transition"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-40 h-20 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.02]">
+                    <Monogram text={p.acronym ?? p.name.slice(0, 3).toUpperCase()} />
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
