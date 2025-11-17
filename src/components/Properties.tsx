@@ -60,7 +60,7 @@ export function Properties() {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('animate-[textUp_0.6s_ease-out_forwards]')
+            entry.target.classList.add('animate-[textUp_0.6s_ease-out_both]')
           }
         }
       },
@@ -103,14 +103,14 @@ export function Properties() {
           <div className="mb-6 text-center">
             <Badge className="bg-[#DD5536] text-white">Featured</Badge>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {featured.map((property) => (
               <Card
                 key={`featured-${property.id}`}
-                className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white opacity-0 translate-y-3"
+                className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white flex flex-col"
                 data-reveal="true"
               >
-                <div className="relative h-56 overflow-hidden">
+                <div className="relative h-60 overflow-hidden">
                   <ImageWithFallback
                     src={property.image}
                     alt={property.title}
@@ -126,7 +126,7 @@ export function Properties() {
                     {property.type}
                   </Badge>
                 </div>
-                <CardContent className="p-5">
+                <CardContent className="p-5 flex-1 flex flex-col">
                   <h3 className="text-lg text-black mb-2 group-hover:text-[#DD5536] transition-colors">
                     {property.title}
                   </h3>
@@ -150,9 +150,9 @@ export function Properties() {
                       )}
                     </div>
                   )}
-                  <div className="flex items-center justify-between">
+                  <div className="mt-auto flex items-center justify-between">
                     <div className="text-xl text-[#DD5536]">{property.price}</div>
-                    <Button className="bg-black text-white hover:bg-gray-800 group/btn">
+                    <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing">
                       Schedule Viewing
                       <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                     </Button>
@@ -163,14 +163,14 @@ export function Properties() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
           {filtered.map((property) => (
             <Card
               key={property.id}
-              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white opacity-0 translate-y-3"
+              className="group overflow-hidden rounded-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-gray-200 bg-white flex flex-col"
               data-reveal="true"
             >
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-60 overflow-hidden">
                 <ImageWithFallback
                   src={property.image}
                   alt={property.title}
@@ -181,7 +181,7 @@ export function Properties() {
                   {property.type}
                 </Badge>
               </div>
-              <CardContent className="p-5">
+              <CardContent className="p-5 flex-1 flex flex-col">
                 <h3 className="text-lg text-black mb-2 group-hover:text-[#DD5536] transition-colors">
                   {property.title}
                 </h3>
@@ -205,9 +205,9 @@ export function Properties() {
                     )}
                   </div>
                 )}
-                <div className="flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{property.price}</div>
-                  <Button className="bg-black text-white hover:bg-gray-800 group/btn">
+                  <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing">
                     Schedule Viewing
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                   </Button>
