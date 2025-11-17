@@ -49,20 +49,20 @@ export function TrustSignals() {
         </div>
 
         <div className="group overflow-hidden">
-          <div className="flex gap-6 items-center w-[200%] animate-[marquee_28s_linear_infinite] group-hover:[animation-play-state:paused]">
+          <div className="flex gap-8 items-center w-[200%] animate-[marquee_28s_linear_infinite] group-hover:[animation-play-state:paused]">
             {trackItems.map((p, i) => (
               <div key={`${p.id}-${i}`} className="shrink-0">
                 {p.logo ? (
-                  <div className="w-40 h-20 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.02]">
+                  <div className="w-52 h-24 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.03]">
                     <ImageWithFallback
                       src={p.logo}
                       alt={p.name}
-                      className="w-full h-full object-contain filter grayscale hover:grayscale-0 transition"
+                      className="max-h-12 w-auto mx-auto filter grayscale hover:grayscale-0 transition-transform duration-300"
                       loading="lazy"
                     />
                   </div>
                 ) : (
-                  <div className="w-40 h-20 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.02]">
+                  <div className="w-52 h-24 rounded-xl border border-gray-200 bg-white overflow-hidden flex items-center justify-center hover:shadow-md transition-all duration-300 hover:scale-[1.03]">
                     <Monogram text={p.acronym ?? p.name.slice(0, 3).toUpperCase()} />
                   </div>
                 )}
