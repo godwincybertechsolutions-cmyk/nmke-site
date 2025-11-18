@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, CardContent } from './ui/card'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -24,6 +24,8 @@ export function Auth() {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
         setMessage('Logged in')
+        window.history.pushState(null, '', '/profile')
+        window.dispatchEvent(new PopStateEvent('popstate'))
       }
     } catch (e: any) {
       setMessage(e.message || 'Authentication error')
@@ -31,6 +33,22 @@ export function Auth() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        window.history.pushState(null, '', '/profile')
+        window.dispatchEvent(new PopStateEvent('popstate'))
+      }
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        window.history.pushState(null, '', '/profile')
+        window.dispatchEvent(new PopStateEvent('popstate'))
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   return (
     <section id="auth" className="py-24 px-4 bg-white">
