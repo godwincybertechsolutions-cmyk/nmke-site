@@ -242,25 +242,34 @@ export function Safaris() {
                       if (selected <= new Date(today.getFullYear(), today.getMonth(), today.getDate())) { setError('Start date must be in the future'); return }
                       if (Number(form.groupSize) < 1) { setError('Group size must be at least 1'); return }
                       setSubmitting(true)
-                      const { data: sessionData } = await supabase.auth.getSession()
-                      const uid = sessionData.session?.user?.id ?? null
-                      const { error } = await supabase.from('itineraries').insert({
-                        safari_id: targetSafari?.id ?? null,
-                        safari_title: targetSafari?.title ?? null,
-                        name: form.name,
-                        email: form.email,
-                        phone: form.phone,
-                        start_date: form.startDate,
-                        group_size: Number(form.groupSize),
-                        user_id: uid,
-                        status: 'pending',
-                        custom: targetSafari ? false : true
-                      })
-                      setSubmitting(false)
-                      if (!error) {
-                        setSuccess(true)
-                      } else {
-                        setError(error.message)
+                      try {
+                        const { data: sessionData } = await supabase.auth.getSession()
+                        const token = sessionData.session?.access_token
+                        if (!token) { setError('You must be logged in'); setSubmitting(false); return }
+                        const base = import.meta.env.VITE_SUPABASE_URL.replace('supabase.co', 'functions.supabase.co')
+                        const res = await fetch(`${base}/request-itinerary`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                          body: JSON.stringify({
+                            safari_id: targetSafari?.id ?? null,
+                            safari_title: targetSafari?.title ?? null,
+                            name: form.name,
+                            email: form.email,
+                            phone: form.phone,
+                            start_date: form.startDate,
+                            group_size: Number(form.groupSize)
+                          })
+                        })
+                        const body = await res.json()
+                        setSubmitting(false)
+                        if (res.ok && body?.ok) {
+                          setSuccess(true)
+                        } else {
+                          setError(body?.error || 'Submission failed')
+                        }
+                      } catch (e: any) {
+                        setSubmitting(false)
+                        setError(e?.message || 'Network error')
                       }
                     }}
                   >
