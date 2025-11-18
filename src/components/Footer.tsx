@@ -1,7 +1,7 @@
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
-export function Footer() {
+export function Footer({ onNavigate }: { onNavigate?: (path: string) => void }) {
   return (
     <footer className="bg-black text-white py-16 px-4">
       <div className="max-w-7xl mx-auto">
@@ -43,31 +43,31 @@ export function Footer() {
             <h4 className="text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2.5">
               <li>
-                <a href="#home" className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
+                <a href="/" onClick={(e) => { e.preventDefault(); onNavigate?.('/') }} className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-[#DD5536] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
                   Home
                 </a>
               </li>
               <li>
-                <a href="#properties" className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
+                <a href="/properties" onClick={(e) => { e.preventDefault(); onNavigate?.('/properties') }} className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-[#DD5536] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
                   Properties
                 </a>
               </li>
               <li>
-                <a href="#safaris" className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
+                <a href="/safaris" onClick={(e) => { e.preventDefault(); onNavigate?.('/safaris') }} className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-[#DD5536] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
                   Safaris
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
+                <a href="/about" onClick={(e) => { e.preventDefault(); onNavigate?.('/about') }} className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-[#DD5536] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
                   About
                 </a>
               </li>
               <li>
-                <a href="#contact" className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
+                <a href="/contact" onClick={(e) => { e.preventDefault(); onNavigate?.('/contact') }} className="text-gray-400 hover:text-[#DD5536] transition-colors text-sm flex items-center gap-2 group">
                   <span className="w-1 h-1 bg-[#DD5536] rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
                   Contact
                 </a>
