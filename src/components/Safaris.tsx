@@ -43,6 +43,21 @@ export function Safaris() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', startDate: '', groupSize: '' })
   const [targetSafari, setTargetSafari] = useState<any>(null)
   const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+
+  const prefillFromProfile = async () => {
+    const { data: sessionData } = await supabase.auth.getSession()
+    if (!sessionData.session) return
+    const uid = sessionData.session.user.id
+    const { data: profile } = await supabase.from('profiles').select('*').eq('user_id', uid).maybeSingle()
+    setForm((f) => ({
+      ...f,
+      name: `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`.trim(),
+      email: sessionData.session.user.email ?? '',
+      phone: profile?.phone ?? f.phone
+    }))
+  }
   useEffect(() => {
     const section = document.getElementById('safaris')
     if (!section) return
@@ -148,7 +163,7 @@ export function Safaris() {
 
                 <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{safari.price}{safari.perPerson ? ' per person' : ''}</div>
-                  <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn" onClick={() => { setTargetSafari(safari); setOpen(true) }}>
+                  <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn" onClick={async () => { setTargetSafari(safari); await prefillFromProfile(); setSuccess(false); setError(null); setOpen(true) }}>
                     Book Now
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                   </Button>
@@ -166,7 +181,7 @@ export function Safaris() {
             <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
               Let us create a personalized safari experience tailored to your preferences, budget, and schedule
             </p>
-            <Button size="lg" className="bg-white text-[#DD5536] hover:bg-gray-100 px-8" onClick={() => setOpen(true)}>
+            <Button size="lg" className="bg-white text-[#DD5536] hover:bg-gray-100 px-8" onClick={async () => { setTargetSafari(null); await prefillFromProfile(); setSuccess(false); setError(null); setOpen(true) }}>
               Request Custom Itinerary
               <ArrowRight className="ml-2" size={18} />
             </Button>
@@ -179,54 +194,75 @@ export function Safaris() {
               <DialogTitle>Request Itinerary</DialogTitle>
             </DialogHeader>
             <div className="space-y-3">
-              <div>
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-              </div>
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-              </div>
-              <div>
-                <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="startDate">Start Date</Label>
-                  <Input id="startDate" type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
+              {success ? (
+                <div className="space-y-4">
+                  <div className="text-black">Itinerary requested. Status: pending</div>
+                  <div className="flex gap-3">
+                    <Button className="bg-white text-[#DD5536] hover:bg-gray-100" onClick={() => { setOpen(false); window.history.pushState(null, '', '/profile'); window.dispatchEvent(new PopStateEvent('popstate')) }}>Go to Profile</Button>
+                    <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="groupSize">Group Size</Label>
-                  <Input id="groupSize" type="number" value={form.groupSize} onChange={(e) => setForm({ ...form, groupSize: e.target.value })} />
-                </div>
-              </div>
-              <Button
-                className="bg-white text-[#DD5536] hover:bg-gray-100"
-                disabled={submitting}
-                onClick={async () => {
-                  setSubmitting(true)
-                  const { error } = await supabase.from('itineraries').insert({
-                    safari_id: targetSafari?.id,
-                    safari_title: targetSafari?.title,
-                    name: form.name,
-                    email: form.email,
-                    phone: form.phone,
-                    start_date: form.startDate,
-                    group_size: form.groupSize
-                  })
-                  setSubmitting(false)
-                  if (!error) {
-                    setOpen(false)
-                    setForm({ name: '', email: '', phone: '', startDate: '', groupSize: '' })
-                    alert('Itinerary requested')
-                  } else {
-                    alert(error.message)
-                  }
-                }}
-              >
-                {submitting ? 'Submitting...' : 'Submit'}
-              </Button>
+              ) : (
+                <>
+                  <div>
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label htmlFor="startDate">Start Date</Label>
+                      <Input id="startDate" type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
+                    </div>
+                    <div>
+                      <Label htmlFor="groupSize">Group Size</Label>
+                      <Input id="groupSize" type="number" value={form.groupSize} onChange={(e) => setForm({ ...form, groupSize: e.target.value })} />
+                    </div>
+                  </div>
+                  {error && <div className="text-sm text-red-600">{error}</div>}
+                  <Button
+                    className="bg-white text-[#DD5536] hover:bg-gray-100"
+                    disabled={submitting}
+                    onClick={async () => {
+                      setError(null)
+                      if (!form.name || !form.email || !form.phone || !form.startDate || !form.groupSize) { setError('All fields are required'); return }
+                      const today = new Date(); const selected = new Date(form.startDate)
+                      if (selected <= new Date(today.getFullYear(), today.getMonth(), today.getDate())) { setError('Start date must be in the future'); return }
+                      if (Number(form.groupSize) < 1) { setError('Group size must be at least 1'); return }
+                      setSubmitting(true)
+                      const { data: sessionData } = await supabase.auth.getSession()
+                      const uid = sessionData.session?.user?.id ?? null
+                      const { error } = await supabase.from('itineraries').insert({
+                        safari_id: targetSafari?.id ?? null,
+                        safari_title: targetSafari?.title ?? null,
+                        name: form.name,
+                        email: form.email,
+                        phone: form.phone,
+                        start_date: form.startDate,
+                        group_size: Number(form.groupSize),
+                        user_id: uid,
+                        status: 'pending',
+                        custom: targetSafari ? false : true
+                      })
+                      setSubmitting(false)
+                      if (!error) {
+                        setSuccess(true)
+                      } else {
+                        setError(error.message)
+                      }
+                    }}
+                  >
+                    {submitting ? 'Submitting...' : 'Submit'}
+                  </Button>
+                </>
+              )}
             </div>
           </DialogContent>
         </Dialog>
@@ -234,4 +270,3 @@ export function Safaris() {
     </section>
   );
 }
-
