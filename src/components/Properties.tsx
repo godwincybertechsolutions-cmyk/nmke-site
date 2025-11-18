@@ -299,25 +299,35 @@ export function Properties() {
                       const today = new Date(); const selected = new Date(form.date)
                       if (selected <= new Date(today.getFullYear(), today.getMonth(), today.getDate())) { setError('Date must be in the future'); return }
                       setSubmitting(true)
-                      const { data: sessionData } = await supabase.auth.getSession()
-                      const uid = sessionData.session?.user?.id ?? null
-                      const { error } = await supabase.from('viewings').insert({
-                        property_id: targetProperty?.id,
-                        property_title: targetProperty?.title,
-                        name: form.name,
-                        email: form.email,
-                        phone: form.phone,
-                        date: form.date,
-                        time: form.time,
-                        notes: form.notes,
-                        user_id: uid,
-                        status: 'pending'
-                      })
-                      setSubmitting(false)
-                      if (!error) {
-                        setSuccess(true)
-                      } else {
-                        setError(error.message)
+                      try {
+                        const { data: sessionData } = await supabase.auth.getSession()
+                        const token = sessionData.session?.access_token
+                        if (!token) { setError('You must be logged in'); setSubmitting(false); return }
+                        const base = import.meta.env.VITE_SUPABASE_URL.replace('supabase.co', 'functions.supabase.co')
+                        const res = await fetch(`${base}/request-viewing`, {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                          body: JSON.stringify({
+                            property_id: targetProperty?.id,
+                            property_title: targetProperty?.title,
+                            name: form.name,
+                            email: form.email,
+                            phone: form.phone,
+                            date: form.date,
+                            time: form.time,
+                            notes: form.notes
+                          })
+                        })
+                        const body = await res.json()
+                        setSubmitting(false)
+                        if (res.ok && body?.ok) {
+                          setSuccess(true)
+                        } else {
+                          setError(body?.error || 'Submission failed')
+                        }
+                      } catch (e: any) {
+                        setSubmitting(false)
+                        setError(e?.message || 'Network error')
                       }
                     }}
                   >
