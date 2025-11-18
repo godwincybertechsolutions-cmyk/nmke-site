@@ -49,8 +49,7 @@ export function Safaris() {
   const prefillFromProfile = async (): Promise<boolean> => {
     const { data: sessionData } = await supabase.auth.getSession()
     if (!sessionData.session) {
-      window.history.pushState(null, '', '/auth')
-      window.dispatchEvent(new PopStateEvent('popstate'))
+      setError('Login required')
       return false
     }
     const uid = sessionData.session.user.id
@@ -168,7 +167,7 @@ export function Safaris() {
 
                 <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{safari.price}{safari.perPerson ? ' per person' : ''}</div>
-                  <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn" onClick={async () => { setTargetSafari(safari); const ok = await prefillFromProfile(); if (!ok) return; setSuccess(false); setError(null); setOpen(true) }}>
+                  <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn" onClick={async () => { setTargetSafari(safari); const ok = await prefillFromProfile(); setSuccess(false); if (ok) setError(null); setOpen(true) }}>
                     Book Now
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                   </Button>
@@ -186,7 +185,7 @@ export function Safaris() {
             <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
               Let us create a personalized safari experience tailored to your preferences, budget, and schedule
             </p>
-            <Button size="lg" className="bg-white text-[#DD5536] hover:bg-gray-100 px-8" onClick={async () => { setTargetSafari(null); const ok = await prefillFromProfile(); if (!ok) return; setSuccess(false); setError(null); setOpen(true) }}>
+            <Button size="lg" className="bg-white text-[#DD5536] hover:bg-gray-100 px-8" onClick={async () => { setTargetSafari(null); const ok = await prefillFromProfile(); setSuccess(false); if (ok) setError(null); setOpen(true) }}>
               Request Custom Itinerary
               <ArrowRight className="ml-2" size={18} />
             </Button>
@@ -204,6 +203,14 @@ export function Safaris() {
                   <div className="text-black">Itinerary requested. Status: pending</div>
                   <div className="flex gap-3">
                     <Button className="bg-white text-[#DD5536] hover:bg-gray-100" onClick={() => { setOpen(false); window.history.pushState(null, '', '/profile'); window.dispatchEvent(new PopStateEvent('popstate')) }}>Go to Profile</Button>
+                    <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
+                  </div>
+                </div>
+              ) : error === 'Login required' ? (
+                <div className="space-y-4">
+                  <div className="text-black">Login required to request an itinerary</div>
+                  <div className="flex gap-3">
+                    <Button className="bg-white text-[#DD5536] hover:bg-gray-100" onClick={() => { setOpen(false); window.history.pushState(null, '', '/auth'); window.dispatchEvent(new PopStateEvent('popstate')) }}>Go to Login</Button>
                     <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
                   </div>
                 </div>
