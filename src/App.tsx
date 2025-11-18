@@ -10,6 +10,7 @@ import { TrustSignals } from './components/TrustSignals';
 import { MobileCTA } from './components/MobileCTA';
 import { GlobalSearch } from './components/GlobalSearch';
 import { useEffect, useState } from 'react';
+import { Auth } from './components/Auth';
 
 export default function App() {
   const [route, setRoute] = useState<string>(window.location.pathname || '/');
@@ -61,8 +62,14 @@ export default function App() {
             <Contact />
           </>
         )}
+        {route === '/auth' && (
+          <>
+            <Auth />
+          </>
+        )}
       </main>
       <Footer onNavigate={navigate} />
     </div>
   );
 }
+
