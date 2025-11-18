@@ -3,7 +3,11 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { supabase } from '../lib/supabase';
 
 const safaris = [
   {
@@ -35,6 +39,10 @@ const safaris = [
 ];
 
 export function Safaris() {
+  const [open, setOpen] = useState(false)
+  const [form, setForm] = useState({ name: '', email: '', phone: '', startDate: '', groupSize: '' })
+  const [targetSafari, setTargetSafari] = useState<any>(null)
+  const [submitting, setSubmitting] = useState(false)
   useEffect(() => {
     const section = document.getElementById('safaris')
     if (!section) return
@@ -140,7 +148,7 @@ export function Safaris() {
 
                 <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{safari.price}{safari.perPerson ? ' per person' : ''}</div>
-                  <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn">
+                  <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e] group/btn" onClick={() => { setTargetSafari(safari); setOpen(true) }}>
                     Book Now
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                   </Button>
@@ -158,13 +166,72 @@ export function Safaris() {
             <p className="text-lg md:text-xl mb-8 text-white/90 max-w-2xl mx-auto">
               Let us create a personalized safari experience tailored to your preferences, budget, and schedule
             </p>
-            <Button size="lg" className="bg-white text-[#DD5536] hover:bg-gray-100 px-8">
+            <Button size="lg" className="bg-white text-[#DD5536] hover:bg-gray-100 px-8" onClick={() => setOpen(true)}>
               Request Custom Itinerary
               <ArrowRight className="ml-2" size={18} />
             </Button>
           </CardContent>
         </Card>
+
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Request Itinerary</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              </div>
+              <div>
+                <Label htmlFor="phone">Phone</Label>
+                <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="startDate">Start Date</Label>
+                  <Input id="startDate" type="date" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
+                </div>
+                <div>
+                  <Label htmlFor="groupSize">Group Size</Label>
+                  <Input id="groupSize" type="number" value={form.groupSize} onChange={(e) => setForm({ ...form, groupSize: e.target.value })} />
+                </div>
+              </div>
+              <Button
+                className="bg-white text-[#DD5536] hover:bg-gray-100"
+                disabled={submitting}
+                onClick={async () => {
+                  setSubmitting(true)
+                  const { error } = await supabase.from('itineraries').insert({
+                    safari_id: targetSafari?.id,
+                    safari_title: targetSafari?.title,
+                    name: form.name,
+                    email: form.email,
+                    phone: form.phone,
+                    start_date: form.startDate,
+                    group_size: form.groupSize
+                  })
+                  setSubmitting(false)
+                  if (!error) {
+                    setOpen(false)
+                    setForm({ name: '', email: '', phone: '', startDate: '', groupSize: '' })
+                    alert('Itinerary requested')
+                  } else {
+                    alert(error.message)
+                  }
+                }}
+              >
+                {submitting ? 'Submitting...' : 'Submit'}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );
 }
+
