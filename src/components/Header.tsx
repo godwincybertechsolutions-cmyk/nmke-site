@@ -2,10 +2,12 @@ import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { supabase } from '../lib/supabase';
 
 export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('home');
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const go = (path: string) => {
     if (onNavigate) onNavigate(path)
@@ -47,6 +49,16 @@ export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) 
         setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50)
       }
     }
+  }, [])
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setLoggedIn(!!data.session)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLoggedIn(!!session)
+    })
+    return () => subscription.unsubscribe()
   }, [])
 
   return (
@@ -127,13 +139,32 @@ export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) 
             >
               Request Itinerary
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => go('/auth')}
-              className="ml-2"
-            >
-              Login
-            </Button>
+            {loggedIn ? (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => go('/profile')}
+                  className="ml-2"
+                >
+                  Profile
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={async () => { await supabase.auth.signOut(); go('/') }}
+                  className="ml-2"
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => go('/auth')}
+                className="ml-2"
+              >
+                Login
+              </Button>
+            )}
           </nav>
 
           {/* Mobile menu button */}
@@ -198,13 +229,32 @@ export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) 
             >
               Request Itinerary
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => go('/auth')}
-              className="justify-start"
-            >
-              Login
-            </Button>
+            {loggedIn ? (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => go('/profile')}
+                  className="justify-start"
+                >
+                  Profile
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={async () => { await supabase.auth.signOut(); go('/') }}
+                  className="justify-start"
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => go('/auth')}
+                className="justify-start"
+              >
+                Login
+              </Button>
+            )}
           </nav>
         )}
       </div>
