@@ -11,6 +11,7 @@ import { MobileCTA } from './components/MobileCTA';
 import { GlobalSearch } from './components/GlobalSearch';
 import { useEffect, useState } from 'react';
 import { Auth } from './components/Auth';
+import { Profile } from './components/Profile';
 
 export default function App() {
   const [route, setRoute] = useState<string>(window.location.pathname || '/');
@@ -67,9 +68,13 @@ export default function App() {
             <Auth />
           </>
         )}
+        {route === '/profile' && (
+          <>
+            <Profile />
+          </>
+        )}
       </main>
       <Footer onNavigate={navigate} />
     </div>
   );
 }
-
