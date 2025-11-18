@@ -4,6 +4,10 @@ import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { useEffect, useMemo, useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { supabase } from '../lib/supabase';
 
 const properties = [
   {
@@ -46,6 +50,10 @@ const properties = [
 
 export function Properties() {
   const [selectedArea, setSelectedArea] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', date: '', time: '' });
+  const [targetProperty, setTargetProperty] = useState<any>(null);
+  const [submitting, setSubmitting] = useState(false);
   const areas = ['Westlands', 'Karen', 'Riverside'];
   const featured = useMemo(() => properties.filter((p) => p.featured), []);
   const filtered = useMemo(() => {
@@ -152,7 +160,7 @@ export function Properties() {
                   )}
                   <div className="mt-auto flex items-center justify-between">
                     <div className="text-xl text-[#DD5536]">{property.price}</div>
-                    <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing">
+                    <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={() => { setTargetProperty(property); setOpen(true) }}>
                       Schedule Viewing
                       <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                     </Button>
@@ -207,7 +215,7 @@ export function Properties() {
                 )}
                 <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{property.price}</div>
-                  <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing">
+                  <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={() => { setTargetProperty(property); setOpen(true) }}>
                     Schedule Viewing
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                   </Button>
@@ -216,6 +224,64 @@ export function Properties() {
             </Card>
           ))}
         </div>
+
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Schedule Viewing</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3">
+              <div>
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              </div>
+              <div>
+                <Label htmlFor="phone">Phone</Label>
+                <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="date">Date</Label>
+                  <Input id="date" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+                </div>
+                <div>
+                  <Label htmlFor="time">Time</Label>
+                  <Input id="time" type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} />
+                </div>
+              </div>
+              <Button
+                className="bg-[#DD5536] text-white hover:bg-[#c44a2e]"
+                disabled={submitting}
+                onClick={async () => {
+                  setSubmitting(true)
+                  const { error } = await supabase.from('viewings').insert({
+                    property_id: targetProperty?.id,
+                    property_title: targetProperty?.title,
+                    name: form.name,
+                    email: form.email,
+                    phone: form.phone,
+                    date: form.date,
+                    time: form.time
+                  })
+                  setSubmitting(false)
+                  if (!error) {
+                    setOpen(false)
+                    setForm({ name: '', email: '', phone: '', date: '', time: '' })
+                    alert('Viewing scheduled')
+                  } else {
+                    alert(error.message)
+                  }
+                }}
+              >
+                {submitting ? 'Submitting...' : 'Submit'}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <div className="text-center mt-16">
           <Button size="lg" className="bg-[#DD5536] text-white hover:bg-[#c44a2e] px-8">
