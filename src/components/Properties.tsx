@@ -182,7 +182,7 @@ export function Properties() {
                   )}
                   <div className="mt-auto flex items-center justify-between">
                     <div className="text-xl text-[#DD5536]">{property.price}</div>
-                    <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); const ok = await prefillFromProfile(); if (!ok) return; setSuccess(false); setError(null); setOpen(true) }}>
+                    <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); const ok = await prefillFromProfile(); setSuccess(false); if (ok) setError(null); setOpen(true) }}>
                       Schedule Viewing
                       <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                     </Button>
@@ -237,7 +237,7 @@ export function Properties() {
                 )}
                 <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{property.price}</div>
-                  <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); const ok = await prefillFromProfile(); if (!ok) return; setSuccess(false); setError(null); setOpen(true) }}>
+                  <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); const ok = await prefillFromProfile(); setSuccess(false); if (ok) setError(null); setOpen(true) }}>
                     Schedule Viewing
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                   </Button>
@@ -258,6 +258,14 @@ export function Properties() {
                   <div className="text-black">Viewing scheduled. Status: pending</div>
                   <div className="flex gap-3">
                     <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e]" onClick={() => { setOpen(false); window.history.pushState(null, '', '/profile'); window.dispatchEvent(new PopStateEvent('popstate')) }}>Go to Profile</Button>
+                    <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
+                  </div>
+                </div>
+              ) : error === 'Login required' ? (
+                <div className="space-y-4">
+                  <div className="text-black">Login required to schedule a viewing</div>
+                  <div className="flex gap-3">
+                    <Button className="bg-[#DD5536] text-white hover:bg-[#c44a2e]" onClick={() => { setOpen(false); window.history.pushState(null, '', '/auth'); window.dispatchEvent(new PopStateEvent('popstate')) }}>Go to Login</Button>
                     <Button variant="outline" onClick={() => setOpen(false)}>Close</Button>
                   </div>
                 </div>
@@ -353,3 +361,4 @@ export function Properties() {
     </section>
   );
 }
+
