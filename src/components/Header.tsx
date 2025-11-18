@@ -106,6 +106,15 @@ export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) 
               About
             </Button>
             <Button
+              variant="ghost"
+              onClick={() => go('/contact')}
+              className={`relative text-black hover:text-[#DD5536] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-full after:bg-[#DD5536] after:scale-x-0 after:transition-transform after:duration-200 hover:after:scale-x-100 ${
+                window.location.pathname === '/contact' ? 'text-[#DD5536] after:scale-x-100' : ''
+              }`}
+            >
+              Contact
+            </Button>
+            <Button
               onClick={() => go('/properties')}
               className="bg-[#DD5536] text-white hover:bg-[#c44a2e] ml-2"
             >
@@ -161,6 +170,13 @@ export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) 
               className="text-black hover:text-[#DD5536] justify-start"
             >
               About
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => go('/contact')}
+              className="text-black hover:text-[#DD5536] justify-start"
+            >
+              Contact
             </Button>
             <Button
               onClick={() => go('/properties')}
