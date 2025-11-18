@@ -247,6 +247,8 @@ export function Safaris() {
                         const token = sessionData.session?.access_token
                         if (!token) { setError('You must be logged in'); setSubmitting(false); return }
                         const base = import.meta.env.VITE_SUPABASE_URL.replace('supabase.co', 'functions.supabase.co')
+                        const controller = new AbortController()
+                        const timeout = setTimeout(() => controller.abort(), 15000)
                         const res = await fetch(`${base}/request-itinerary`, {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -258,8 +260,10 @@ export function Safaris() {
                             phone: form.phone,
                             start_date: form.startDate,
                             group_size: Number(form.groupSize)
-                          })
+                          }),
+                          signal: controller.signal
                         })
+                        clearTimeout(timeout)
                         const body = await res.json()
                         setSubmitting(false)
                         if (res.ok && body?.ok) {
