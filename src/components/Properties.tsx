@@ -58,9 +58,13 @@ export function Properties() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const prefillFromProfile = async () => {
+  const prefillFromProfile = async (): Promise<boolean> => {
     const { data: sessionData } = await supabase.auth.getSession()
-    if (!sessionData.session) return
+    if (!sessionData.session) {
+      window.history.pushState(null, '', '/auth')
+      window.dispatchEvent(new PopStateEvent('popstate'))
+      return false
+    }
     const uid = sessionData.session.user.id
     const { data: profile } = await supabase.from('profiles').select('*').eq('user_id', uid).maybeSingle()
     setForm((f) => ({
@@ -70,6 +74,7 @@ export function Properties() {
       phone: profile?.phone ?? f.phone,
       notes: f.notes
     }))
+    return true
   }
   const areas = ['Westlands', 'Karen', 'Riverside'];
   const featured = useMemo(() => properties.filter((p) => p.featured), []);
@@ -177,7 +182,7 @@ export function Properties() {
                   )}
                   <div className="mt-auto flex items-center justify-between">
                     <div className="text-xl text-[#DD5536]">{property.price}</div>
-                    <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); await prefillFromProfile(); setSuccess(false); setError(null); setOpen(true) }}>
+                    <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); const ok = await prefillFromProfile(); if (!ok) return; setSuccess(false); setError(null); setOpen(true) }}>
                       Schedule Viewing
                       <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                     </Button>
@@ -232,7 +237,7 @@ export function Properties() {
                 )}
                 <div className="mt-auto flex items-center justify-between">
                   <div className="text-xl text-[#DD5536]">{property.price}</div>
-                  <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); await prefillFromProfile(); setSuccess(false); setError(null); setOpen(true) }}>
+                  <Button className="bg-black text-white hover:bg-gray-800 group/btn" aria-label="Schedule Viewing" onClick={async () => { setTargetProperty(property); const ok = await prefillFromProfile(); if (!ok) return; setSuccess(false); setError(null); setOpen(true) }}>
                     Schedule Viewing
                     <ArrowRight className="ml-2 group-hover/btn:translate-x-1 transition-transform" size={16} />
                   </Button>
@@ -334,4 +339,3 @@ export function Properties() {
     </section>
   );
 }
-
