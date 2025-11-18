@@ -127,6 +127,13 @@ export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) 
             >
               Request Itinerary
             </Button>
+            <Button
+              variant="outline"
+              onClick={() => go('/auth')}
+              className="ml-2"
+            >
+              Login
+            </Button>
           </nav>
 
           {/* Mobile menu button */}
@@ -190,6 +197,13 @@ export function Header({ onNavigate }: { onNavigate?: (path: string) => void }) 
               className="justify-start"
             >
               Request Itinerary
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => go('/auth')}
+              className="justify-start"
+            >
+              Login
             </Button>
           </nav>
         )}
