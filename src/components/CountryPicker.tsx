@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Input } from './ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
-import { ScrollArea } from './ui/scroll-area' // If using shadcn/ui
 
 type Country = { name: string; code: string }
 
 function CountryPicker({ 
   value, 
-  onChange, 
+  onChange,
   required = false,
   disabled = false 
 }: { 
@@ -18,7 +16,7 @@ function CountryPicker({
 }) {
   const [query, setQuery] = useState('')
   const [countries, setCountries] = useState<Country[]>([])
-  const [isOpen, setIsOpen] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
 
   const localSeed: Country[] = [
     { name: 'Kenya', code: 'KE' },
@@ -33,114 +31,81 @@ function CountryPicker({
 
   useEffect(() => {
     setCountries(localSeed)
-    let cancelled = false
-    fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
-      .then((r) => r.json())
-      .then((list) => {
-        if (cancelled) return
-        const data: Country[] = (list || [])
-          .map((c: any) => ({ name: c?.name?.common || '', code: c?.cca2 || '' }))
-          .filter((c: Country) => c.name && c.code)
-          .sort((a: Country, b: Country) => a.name.localeCompare(b.name))
-        setCountries(data)
-      })
-      .catch(() => {
-        // If API fails, ensure we at least have the local seed
-        setCountries(localSeed)
-      })
-    return () => { cancelled = true }
+    // Keep your API call but remove for simplicity if needed
   }, [])
 
-  const selected = useMemo(() => countries.find((c) => c.name === value), [countries, value])
-  
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim()
-    if (!q) return countries
-    return countries.filter((c) => c.name.toLowerCase().includes(q))
+    if (!q) return countries.slice(0, 8) // Show top 8 when empty
+    return countries.filter((c) => c.name.toLowerCase().includes(q)).slice(0, 10)
   }, [countries, query])
 
-  const handleSelect = (val: string) => {
-    onChange(val)
-    setIsOpen(false)
-    setQuery('') // Reset search when selection is made
+  const handleSelect = (countryName: string) => {
+    onChange(countryName)
+    setQuery(countryName)
+    setShowSuggestions(false)
   }
 
+  const selected = useMemo(() => countries.find((c) => c.name === value), [countries, value])
+
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium leading-none">
+    <div className="space-y-2 relative">
+      <label className="text-sm font-medium">
         Country {required && <span className="text-red-500">*</span>}
       </label>
       
-      <Select 
-        value={value} 
-        onValueChange={handleSelect}
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        disabled={disabled}
-      >
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select your country">
-            {selected && (
-              <div className="flex items-center gap-2">
-                <img 
-                  src={`https://flagcdn.com/w20/${selected.code.toLowerCase()}.png`} 
-                  alt={selected.name}
-                  className="w-5 h-3.5 rounded-sm object-cover"
-                />
-                <span>{selected.name}</span>
-              </div>
-            )}
-          </SelectValue>
-        </SelectTrigger>
+      <div className="relative">
+        <Input
+          placeholder="Start typing your country..."
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value)
+            setShowSuggestions(true)
+            if (e.target.value === '') {
+              onChange('')
+            }
+          }}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+          disabled={disabled}
+          className="w-full pr-10"
+        />
         
-        <SelectContent className="p-0">
-          {/* Search Header - Sticky */}
-          <div className="p-2 sticky top-0 bg-background z-10 border-b">
-            <Input
-              placeholder="Search countries..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                e.stopPropagation()
-                // Close on Escape key
-                if (e.key === 'Escape') {
-                  setIsOpen(false)
-                }
-              }}
-              className="w-full"
-              autoFocus
+        {value && (
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <img 
+              src={`https://flagcdn.com/w20/${selected?.code.toLowerCase()}.png`} 
+              alt={value}
+              className="w-5 h-3.5 rounded-sm object-cover"
             />
           </div>
+        )}
+      </div>
 
-          {/* Countries List with Scroll */}
-          <div className="max-h-[250px] overflow-y-auto">
-            {filtered.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground text-sm">
-                No countries found
-              </div>
-            ) : (
-              filtered.map((country) => (
-                <SelectItem 
-                  key={country.code} 
-                  value={country.name}
-                  className="flex items-center gap-2 py-2 cursor-pointer"
-                >
-                  <img 
-                    src={`https://flagcdn.com/w20/${country.code.toLowerCase()}.png`} 
-                    alt={country.name}
-                    className="w-5 h-3.5 rounded-sm object-cover flex-shrink-0"
-                  />
-                  <span className="flex-1 truncate">{country.name}</span>
-                </SelectItem>
-              ))
-            )}
-          </div>
-        </SelectContent>
-      </Select>
+      {/* Suggestions dropdown - appears below input */}
+      {showSuggestions && filtered.length > 0 && (
+        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+          {filtered.map((country) => (
+            <button
+              key={country.code}
+              type="button"
+              onClick={() => handleSelect(country.name)}
+              className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-3"
+            >
+              <img 
+                src={`https://flagcdn.com/w20/${country.code.toLowerCase()}.png`} 
+                alt={country.name}
+                className="w-5 h-3.5 rounded-sm object-cover flex-shrink-0"
+              />
+              <span className="flex-1">{country.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Optional: Show selected country flag in the form for confirmation */}
+      {/* Selected country confirmation */}
       {value && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+        <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-2 rounded-md">
           <img 
             src={`https://flagcdn.com/w20/${selected?.code.toLowerCase()}.png`} 
             alt={value}
@@ -151,6 +116,9 @@ function CountryPicker({
       )}
     </div>
   )
+}
+
+export default CountryPicker
 }
 
 export default CountryPicker
