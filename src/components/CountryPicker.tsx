@@ -31,12 +31,12 @@ function CountryPicker({
 
   useEffect(() => {
     setCountries(localSeed)
-    // Keep your API call but remove for simplicity if needed
+    // Your API call logic here...
   }, [])
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim()
-    if (!q) return countries.slice(0, 8) // Show top 8 when empty
+    if (!q) return countries.slice(0, 8)
     return countries.filter((c) => c.name.toLowerCase().includes(q)).slice(0, 10)
   }, [countries, query])
 
@@ -50,9 +50,7 @@ function CountryPicker({
 
   return (
     <div className="space-y-2 relative">
-      <label className="text-sm font-medium">
-        Country {required && <span className="text-red-500">*</span>}
-      </label>
+      {/* REMOVED THE LABEL FROM HERE */}
       
       <div className="relative">
         <Input
@@ -82,7 +80,6 @@ function CountryPicker({
         )}
       </div>
 
-      {/* Suggestions dropdown - appears below input */}
       {showSuggestions && filtered.length > 0 && (
         <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
           {filtered.map((country) => (
@@ -103,7 +100,6 @@ function CountryPicker({
         </div>
       )}
 
-      {/* Selected country confirmation */}
       {value && (
         <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 px-3 py-2 rounded-md">
           <img 
@@ -118,5 +114,6 @@ function CountryPicker({
   )
 }
 
+export default CountryPicker
 export default CountryPicker
 
