@@ -43,8 +43,8 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
     <div className="space-y-3">
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="w-full"><SelectValue placeholder="Select your country" /></SelectTrigger>
-        <SelectContent className="max-h-80 overflow-hidden">
-          <div className="p-2 sticky top-0 bg-white z-10">
+        <SelectContent className="max-h-[60vh]">
+          <div className="p-2 bg-white">
             <Input
               placeholder="Search country"
               value={query}
@@ -52,13 +52,11 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
               onKeyDown={(e) => e.stopPropagation()}
             />
           </div>
-          <div className="max-h-64 overflow-y-auto overscroll-contain">
-            {filtered.map((c) => (
-              <SelectItem key={c.code} value={c.name} className="cursor-pointer">
-                {c.name}
-              </SelectItem>
-            ))}
-          </div>
+          {filtered.map((c) => (
+            <SelectItem key={c.code} value={c.name} className="cursor-pointer">
+              {c.name}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
       {value && (
@@ -84,4 +82,3 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
 }
 
 export default CountryPicker
-
