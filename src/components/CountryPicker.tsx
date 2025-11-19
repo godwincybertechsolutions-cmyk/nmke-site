@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command'
 import { Input } from './ui/input'
-import { Button } from './ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
 type Country = { name: string; code: string; flagPng?: string }
 
-export function CountryPicker({ value, onChange }: { value: string; onChange: (val: string) => void }) {
-  const [open, setOpen] = useState(false)
+function CountryPicker({ value, onChange }: { value: string; onChange: (val: string) => void }) {
+  const [query, setQuery] = useState('')
   const [countries, setCountries] = useState<Country[]>([])
   const localSeed: Country[] = [
     { name: 'Kenya', code: 'KE' },
@@ -19,9 +18,8 @@ export function CountryPicker({ value, onChange }: { value: string; onChange: (v
     { name: 'United States', code: 'US' }
   ]
   useEffect(() => {
+    setCountries(localSeed)
     let cancelled = false
-    if (!open) return
-    if (!countries.length) setCountries(localSeed)
     fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flags')
       .then((r) => r.json())
       .then((list) => {
@@ -33,18 +31,30 @@ export function CountryPicker({ value, onChange }: { value: string; onChange: (v
         setCountries(data)
       })
       .catch(() => {})
-    return () => {
-      cancelled = true
-    }
-  }, [open, countries.length])
+    return () => { cancelled = true }
+  }, [])
   const selected = useMemo(() => countries.find((c) => c.name === value), [countries, value])
   const mapQuery = useMemo(() => encodeURIComponent(value || ''), [value])
+  const filtered = useMemo(() => {
+    const q = query.toLowerCase()
+    return countries.filter((c) => c.name.toLowerCase().includes(q))
+  }, [countries, query])
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2">
-        <Input readOnly value={value || ''} placeholder="Select your country" />
-        <Button variant="outline" onClick={() => setOpen(true)}>Change</Button>
-      </div>
+      <Select value={value} onValueChange={onChange}>
+        <SelectTrigger className="w-full"><SelectValue placeholder="Select your country" /></SelectTrigger>
+        <SelectContent className="max-h-80">
+          <div className="p-2">
+            <Input placeholder="Search country" value={query} onChange={(e) => setQuery(e.target.value)} />
+          </div>
+          {filtered.map((c) => (
+            <SelectItem key={c.code} value={c.name}>
+              {c.flagPng && <img src={c.flagPng} alt={c.name} className="w-6 h-4 mr-2 inline-block rounded-sm object-cover" />}
+              {c.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
       {value && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
@@ -63,26 +73,6 @@ export function CountryPicker({ value, onChange }: { value: string; onChange: (v
           </div>
         </div>
       )}
-      <CommandDialog open={open} onOpenChange={setOpen} title="Select Country" description="Search and choose your country">
-        <CommandInput placeholder="Search country" />
-        <CommandList>
-          <CommandEmpty>Type to search countries</CommandEmpty>
-          <CommandGroup heading="All Countries">
-            {countries.map((c) => (
-              <CommandItem
-                key={c.code}
-                onSelect={() => {
-                  onChange(c.name)
-                  setOpen(false)
-                }}
-              >
-                {c.flagPng && <img src={c.flagPng} alt={c.name} className="w-6 h-4 mr-2 rounded-sm object-cover" />}
-                <span>{c.name}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
     </div>
   )
 }
