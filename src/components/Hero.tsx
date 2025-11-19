@@ -57,7 +57,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section id="home" className="relative min-h-[85vh] md:min-h-[92vh] flex items-center justify-center overflow-hidden scroll-mt-24">
+    <section id="home" className="relative h-screen flex items-center justify-center overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 z-0">
         <video
           autoPlay
@@ -128,4 +128,3 @@ export function Hero() {
     </section>
   );
 }
-
