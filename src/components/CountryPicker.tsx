@@ -88,6 +88,4 @@ export function CountryPicker({ value, onChange }: { value: string; onChange: (v
 }
 
 export default CountryPicker
-}
 
-export default CountryPicker
