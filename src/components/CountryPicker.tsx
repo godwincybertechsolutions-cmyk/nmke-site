@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Input } from './ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
-type Country = { name: string; code: string; flagPng?: string }
+type Country = { name: string; code: string }
 
 function CountryPicker({ value, onChange }: { value: string; onChange: (val: string) => void }) {
   const [query, setQuery] = useState('')
@@ -20,12 +20,12 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
   useEffect(() => {
     setCountries(localSeed)
     let cancelled = false
-    fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flags')
+    fetch('https://restcountries.com/v3.1/all?fields=name,cca2')
       .then((r) => r.json())
       .then((list) => {
         if (cancelled) return
         const data: Country[] = (list || [])
-          .map((c: any) => ({ name: c?.name?.common || '', code: c?.cca2 || '', flagPng: c?.flags?.png || '' }))
+          .map((c: any) => ({ name: c?.name?.common || '', code: c?.cca2 || '' }))
           .filter((c: Country) => c.name && c.code)
           .sort((a: Country, b: Country) => a.name.localeCompare(b.name))
         setCountries(data)
@@ -49,7 +49,6 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
           </div>
           {filtered.map((c) => (
             <SelectItem key={c.code} value={c.name}>
-              {c.flagPng && <img src={c.flagPng} alt={c.name} className="w-6 h-4 mr-2 inline-block rounded-sm object-cover" />}
               {c.name}
             </SelectItem>
           ))}
@@ -58,16 +57,16 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
       {value && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
-            {selected?.flagPng && (
-              <img src={selected.flagPng} alt={value} className="w-10 h-7 rounded-sm object-cover" />
+            {selected && (
+              <img src={`https://flagcdn.com/w40/${selected.code.toLowerCase()}.png`} alt={value} className="w-10 h-7 rounded-sm object-cover" />
             )}
             <div className="text-sm">{value}</div>
           </div>
-          <div className="rounded-md overflow-hidden border">
+          <div className="rounded-md overflow-hidden border max-w-sm">
             <iframe
               title="map"
               src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
-              className="w-full h-40"
+              className="w-full h-24"
               loading="lazy"
             />
           </div>
