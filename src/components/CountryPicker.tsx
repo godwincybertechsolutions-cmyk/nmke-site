@@ -7,6 +7,7 @@ type Country = { name: string; code: string }
 function CountryPicker({ value, onChange }: { value: string; onChange: (val: string) => void }) {
   const [query, setQuery] = useState('')
   const [countries, setCountries] = useState<Country[]>([])
+  
   const localSeed: Country[] = [
     { name: 'Kenya', code: 'KE' },
     { name: 'Uganda', code: 'UG' },
@@ -17,6 +18,7 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
     { name: 'United Kingdom', code: 'GB' },
     { name: 'United States', code: 'US' }
   ]
+
   useEffect(() => {
     setCountries(localSeed)
     let cancelled = false
@@ -33,37 +35,70 @@ function CountryPicker({ value, onChange }: { value: string; onChange: (val: str
       .catch(() => {})
     return () => { cancelled = true }
   }, [])
+
   const selected = useMemo(() => countries.find((c) => c.name === value), [countries, value])
   const mapQuery = useMemo(() => encodeURIComponent(value || ''), [value])
+  
   const filtered = useMemo(() => {
     const q = query.toLowerCase()
     return countries.filter((c) => c.name.toLowerCase().includes(q))
   }, [countries, query])
+
   return (
     <div className="space-y-3">
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full"><SelectValue placeholder="Select your country" /></SelectTrigger>
-        <SelectContent className="max-h-[60vh]">
-          <div className="p-2 bg-white">
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder="Select your country" />
+        </SelectTrigger>
+        <SelectContent className="max-h-[60vh] overflow-auto">
+          {/* Search Input */}
+          <div className="p-2 sticky top-0 bg-background z-10 border-b">
             <Input
               placeholder="Search country"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.stopPropagation()}
+              className="w-full"
             />
           </div>
-          {filtered.map((c) => (
-            <SelectItem key={c.code} value={c.name} className="cursor-pointer">
-              {c.name}
-            </SelectItem>
-          ))}
+          
+          {/* Countries List */}
+          <div className="max-h-[50vh] overflow-y-auto">
+            {filtered.length === 0 ? (
+              <div className="p-4 text-center text-muted-foreground">
+                No countries found
+              </div>
+            ) : (
+              filtered.map((c) => (
+                <SelectItem 
+                  key={c.code} 
+                  value={c.name} 
+                  className="cursor-pointer py-2 px-4"
+                >
+                  <div className="flex items-center gap-2">
+                    <img 
+                      src={`https://flagcdn.com/w20/${c.code.toLowerCase()}.png`} 
+                      alt={c.name}
+                      className="w-5 h-3.5 rounded-sm object-cover"
+                    />
+                    {c.name}
+                  </div>
+                </SelectItem>
+              ))
+            )}
+          </div>
         </SelectContent>
       </Select>
+
       {value && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
             {selected && (
-              <img src={`https://flagcdn.com/w40/${selected.code.toLowerCase()}.png`} alt={value} className="w-10 h-7 rounded-sm object-cover" />
+              <img 
+                src={`https://flagcdn.com/w40/${selected.code.toLowerCase()}.png`} 
+                alt={value} 
+                className="w-10 h-7 rounded-sm object-cover" 
+              />
             )}
             <div className="text-sm">{value}</div>
           </div>
