@@ -9,6 +9,7 @@ export function Hero() {
   const fullText = 'Experience the best of Kenya with our exceptional real estate services and curated safari adventures'
   const [typedText, setTypedText] = useState('')
   const [videoReady, setVideoReady] = useState(false)
+  const [videoError, setVideoError] = useState(false)
 
   useEffect(() => {
     const onScroll = () => {
@@ -63,16 +64,26 @@ export function Hero() {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           poster="https://images.unsplash.com/photo-1669557673726-293309494c20?auto=format&fit=crop&w=1200&q=60"
-          onCanPlay={() => setVideoReady(true)}
+          onLoadedData={() => setVideoReady(true)}
+          onError={() => { setVideoError(true); setVideoReady(false) }}
           className={`w-full h-full object-cover will-change-transform transition-opacity duration-500 ${videoReady ? 'opacity-100' : 'opacity-0'}`}
           style={{ transform: `translateY(${parallax}px)` }}
         >
-          <source src="/building.mp4" type="video/mp4" />
           <source src={heroVideo} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        {!videoReady && (
+          <div className="absolute inset-0">
+            <img
+              src="https://images.unsplash.com/photo-1669557673726-293309494c20?auto=format&fit=crop&w=1600&q=60"
+              alt="Background"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40" />
+          </div>
+        )}
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
