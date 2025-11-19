@@ -8,9 +8,20 @@ type Country = { name: string; code: string; flagPng?: string }
 export function CountryPicker({ value, onChange }: { value: string; onChange: (val: string) => void }) {
   const [open, setOpen] = useState(false)
   const [countries, setCountries] = useState<Country[]>([])
+  const localSeed: Country[] = [
+    { name: 'Kenya', code: 'KE' },
+    { name: 'Uganda', code: 'UG' },
+    { name: 'Tanzania', code: 'TZ' },
+    { name: 'Rwanda', code: 'RW' },
+    { name: 'Ethiopia', code: 'ET' },
+    { name: 'South Africa', code: 'ZA' },
+    { name: 'United Kingdom', code: 'GB' },
+    { name: 'United States', code: 'US' }
+  ]
   useEffect(() => {
     let cancelled = false
-    if (!open || countries.length) return
+    if (!open) return
+    if (!countries.length) setCountries(localSeed)
     fetch('https://restcountries.com/v3.1/all?fields=name,cca2,flags')
       .then((r) => r.json())
       .then((list) => {
@@ -52,10 +63,10 @@ export function CountryPicker({ value, onChange }: { value: string; onChange: (v
           </div>
         </div>
       )}
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog open={open} onOpenChange={setOpen} title="Select Country" description="Search and choose your country">
         <CommandInput placeholder="Search country" />
         <CommandList>
-          <CommandEmpty>No country found</CommandEmpty>
+          <CommandEmpty>Type to search countries</CommandEmpty>
           <CommandGroup heading="All Countries">
             {countries.map((c) => (
               <CommandItem
@@ -74,6 +85,9 @@ export function CountryPicker({ value, onChange }: { value: string; onChange: (v
       </CommandDialog>
     </div>
   )
+}
+
+export default CountryPicker
 }
 
 export default CountryPicker
